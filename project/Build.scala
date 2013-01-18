@@ -1,7 +1,7 @@
 import sbt._
 import Keys._
 
-object SbtIdeaBuild extends Build with BuildExtra {
+object SbtIdeaBuild extends Build with BuildExtra with PublishSettings {
   lazy val sbtIdea = Project("sbt-idea", file("."), settings = mainSettings)
 
   lazy val mainSettings: Seq[Project.Setting[_]] = Defaults.defaultSettings ++ ScriptedPlugin.scriptedSettings ++ Seq(
@@ -9,12 +9,12 @@ object SbtIdeaBuild extends Build with BuildExtra {
     organization := "com.github.mpeltonen",
     name := "sbt-idea",
     version := "1.3.0-SNAPSHOT",
-    publishTo := Some(Resolver.file("Github Pages", Path.userHome / "git" / "mpeltonen.github.com" / "maven" asFile)(Patterns(true, Resolver.mavenStyleBasePattern))),
-    publishTo <<= version { (v: String) =>
-      val nexus = "https://oss.sonatype.org/"
-      if (v.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "content/repositories/snapshots")
-      else Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    },
+//    publishTo := Some(Resolver.file("Github Pages", Path.userHome / "git" / "mpeltonen.github.com" / "maven" asFile)(Patterns(true, Resolver.mavenStyleBasePattern))),
+//    publishTo <<= version { (v: String) =>
+//      val nexus = "https://oss.sonatype.org/"
+//      if (v.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "content/repositories/snapshots")
+//      else Some("releases" at nexus + "service/local/staging/deploy/maven2")
+//    },
     publishMavenStyle := true,
     publishArtifact in Test := false,
     pomIncludeRepository := (_ => false),
@@ -27,7 +27,7 @@ object SbtIdeaBuild extends Build with BuildExtra {
     libraryDependencies ++= Seq(
       "commons-io" % "commons-io" % "2.0.1"
     )
-  ) ++ addSbtPlugin("com.github.mpeltonen" % "sbt-android-plugin" % "0.6.3-SNAPSHOT" % "provided")
+  ) ++ addSbtPlugin("com.github.mpeltonen" % "sbt-android-plugin" % "0.6.3-SNAPSHOT" % "provided") ++ withPublishing
 
   def extraPom = (
     <url>http://your.project.url</url>
